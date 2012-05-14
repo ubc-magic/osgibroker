@@ -1,0 +1,13 @@
+version 1.4:
+	- DONE: check for the effect of altering tables -> bugs seem to be fixed
+	- DONE: testing the querying for events 
+	- DONE: writing unit tests to ensure that the data returned from the events is properly preserved
+	- NO SIDE EFFECT KNOWN: testing if server_time and client_time name changes have had any side effect
+	- DONE: testing if adding StringUnescapeUtil to the Statement manager has had any side effects
+	- DONE: testing the servlet
+	- DONE: specifying the order of appearance for the parameters when querying the servlet
+	- DONE: modifying the queries for the events. right now the queries are really bad.
+
+	issues:
+		- How to specify the last events without knowing the start time. ANSWER: If start is not specified, it means "now". 
+		  so defining the "querySize" for the query equals to specifying "beforeE" without a "start" parameter. 

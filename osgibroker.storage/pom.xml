@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>osgibroker.parent.mvn</artifactId>
+    <groupId>ubc.magic.broker</groupId>
+    <version>1.4.0</version>
+  </parent>
+  
+  <groupId>ubc.magic.broker</groupId>
+  <artifactId>osgibroker.storage</artifactId>
+  <version>1.4.0</version>
+  <name>osgibroker.storage</name>
+  <description>The bundle managing storage of events, topic, subscribeers, etc., for OSGiBroker</description>
+  <url>http://pspi.magic.ubc.ca</url>
+  <packaging>bundle</packaging>
+  
+  <dependencies>
+  	<dependency>
+       <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency> 
+  	<dependency>
+    	<groupId>ubc.magic.broker</groupId>
+    	<artifactId>osgibroker.api</artifactId>
+    	<version>[1.3,1.5)</version>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+	    <groupId>org.jdom</groupId>
+	    <artifactId>com.springsource.org.jdom</artifactId>
+	    <version>1.0.0</version>
+	    <scope>provided</scope>
+	</dependency>
+    <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>com.springsource.org.apache.commons.dbcp</artifactId>
+	    <version>1.2.2.osgi</version>
+	    <scope>provided</scope>
+	</dependency>
+    <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>com.springsource.org.apache.commons.lang</artifactId>
+	    <version>2.4.0</version>
+	    <scope>provided</scope>
+	</dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>com.springsource.org.apache.commons.pool</artifactId>
+	    <version>1.4.0</version>
+	    <scope>provided</scope>
+	</dependency>
+    <dependency>
+  		<groupId>org.ops4j.pax.logging</groupId>
+  		<artifactId>pax-logging-api</artifactId>
+  		<version>1.3.0</version>
+  		<type>bundle</type>
+  		<scope>provided</scope>
+  	</dependency>
+    <dependency>
+  		<groupId>org.ops4j.pax.logging</groupId>
+  		<artifactId>pax-logging-service</artifactId>
+  		<version>1.3.0</version>
+  		<type>bundle</type>
+  		<scope>provided</scope>
+  	</dependency>
+    <dependency>
+	    <groupId>org.apache.ibatis</groupId>
+	    <artifactId>com.springsource.com.ibatis</artifactId>
+	    <version>2.3.4.726</version>
+	    <scope>provided</scope>
+	</dependency>
+    <dependency>
+	    <groupId>com.mysql.jdbc</groupId>
+	    <artifactId>com.springsource.com.mysql.jdbc</artifactId>
+	    <version>5.1.6</version>
+	</dependency>
+    <dependency>
+    	<groupId>org.apache.felix</groupId>
+    	<artifactId>org.osgi.compendium</artifactId>
+    	<version>1.2.0</version>
+    	<type>bundle</type>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+     	<groupId>commons-lang</groupId>
+     	<artifactId>commons-lang</artifactId>	
+     	<version>2.0</version>
+     	<scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <organization>
+  	<name>UBC</name>
+  	<url>http://www.ubc.ca</url>
+  </organization>
+  
+  <build>
+<!--  	<resources>
+  		<resource>
+  			<directory>src/main/*</directory>
+  			<includes>
+  				<include>osgibroker.sql</include>
+  				<include>config.xml</include>
+  			</includes>
+  		</resource>
+  	</resources> -->
+  	
+    <plugins>
+      <plugin>    <!-- (2) START -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.0.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>   
+          	<DynamicImport-Package>com.mysql.jdbc, org.apache.commons.dbcp.*</DynamicImport-Package>
+          	<Export-Package>ca.ubc.magic.broker.storage.*</Export-Package>
+          	<Private-Package>ca.ubc.magic.broker.storage.*</Private-Package>
+            <Bundle-Activator>ca.ubc.magic.broker.storage.mysql.MySQLStoreService</Bundle-Activator>
+            <!-- Embed-Depndency>*;scope=compile|runtime;inline=false</Embed-Depndency>
+            <Embed-Transitive>true</Embed-Transitive-->
+          </instructions>
+        </configuration>
+      </plugin>    
+      <plugin>
+        <groupId>org.ops4j</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+        <version>1.4</version>
+        <configuration>
+            <profiles>log</profiles>
+        </configuration>
+      </plugin>
+     <!--  <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> -->
+    </plugins>
+      
+  </build>
+  
+</project>

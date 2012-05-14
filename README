@@ -1,0 +1,4 @@
+Magic OSGiBroker is an OSGi-based publisher-subscriber middleware for facilitating communications among connecting clients. OSGiBroker enables multi-modal communication between various publishers and subscribers (including, HTTP, TCP Sockets, UDP Sockets, Bluetooth, SMS, VoiceXML, etc.), and goes beyond a simple pub-sub middleware by enabling different clients to also store content or state of their exchanged information.
+
+For more info about Magic OSGiBroker refer to: http://pspi.magic.ubc.ca/code/index.php/p/osgibroker/
+

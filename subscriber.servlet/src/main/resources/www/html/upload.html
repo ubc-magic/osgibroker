@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Upload Content</title>
+
+<script type="text/javascript">
+<!--
+	function insertRow(tblId, index, html)
+	{
+		var tbl = document.getElementById(tblId);
+		try {
+			var newRow = tbl.insertRow(index);
+			if (LogIndex %2 ==0){
+				newRow.bgColor = "#C0C0C0";	
+			}
+			 
+			// index cell
+		    var cellLeft = newRow.insertCell(0);
+		    var textNode = document.createTextNode(LogIndex);
+		    cellLeft.appendChild(textNode);
+			var newCell = newRow.insertCell(1);
+			newCell.innerHTML = html;
+			LogIndex++;
+		} catch (ex) {
+			document.getElementById("message").value = ex;
+		}
+	}
+	
+	function addRowToTable()
+	{
+	  var tbl = document.getElementById('filetable');
+	  var lastRow = tbl.rows.length;
+	  // if there's no header row in the table, then iteration = lastRow + 1
+	  var iteration = lastRow -1;
+	  var row = tbl.insertRow(lastRow);
+	  
+	  // left cell
+	  var cellLeft = row.insertCell(0);
+	  var textNode = document.createTextNode(iteration);
+	  cellLeft.appendChild(textNode);
+	  
+	  // right cell
+	  var cellRight = row.insertCell(1);
+	  var el = document.createElement('input');
+	  el.type = 'file';
+	  el.name = 'fileRow' + iteration;
+	  el.id = 'fileRow' + iteration;
+	  cellRight.appendChild(el);
+	}
+	
+	function removeRowFromTable()
+	{
+	  var tbl = document.getElementById('filetable');
+	  var lastRow = tbl.rows.length;
+	  if (lastRow > 1) tbl.deleteRow(lastRow - 1);
+	}
+//-->
+</script>
+</head>
+<body>
+<form method="post" enctype="multipart/form-data" action="/osgibroker/content">
+	<p>
+		<input type="button" value="Add" onclick="addRowToTable();" />
+		<input type="button" value="Remove" onclick="removeRowFromTable();" />
+
+		Files (row)
+	</p>
+	<table border="1" id="filetable">
+	<tr>
+		<th colspan="3">Files to Upload</th>
+	</tr>
+	<tr>
+		<td>index</td>
+
+		<td>File Location</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td><input type="file" id="fileRow1" name="fileRow" /></td>
+	</tr>
+</table>
+<br />
+Topic: <input type="text" id="topic" name="topic" /><br />
+
+<br />
+<br />
+Client: <input type="text" id="clientID" name="clientID" /><br />
+
+<br />
+<input type="submit" value="Upload" />
+</form>
+</body>
+</html>

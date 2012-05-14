@@ -1,0 +1,16 @@
+<config>
+    <dbDriverName>com.mysql.jdbc.Driver</dbDriverName>
+    <dbUser>root</dbUser>
+    <dbPassword>nima678</dbPassword>
+    <dbName>OSGiBroker</dbName>
+  	<dbURL>jdbc:mysql://localhost:3306/</dbURL>
+    <dbPoolMinSize>30</dbPoolMinSize>
+    <dbPoolMaxSize>70</dbPoolMaxSize>
+    <minEvitIdleTime>21600000</minEvitIdleTime>
+    <timeBetweenEvict>2400000</timeBetweenEvict>
+    <numTestsPerEvict>-1</numTestsPerEvict>
+    <autoReconnectForPools>true</autoReconnectForPools>
+    <validationQuery>SELECT 1</validationQuery>
+</config>
+<!-- <dbURI><![CDATA[jdbc:mysql://pspi.magic.ubc.ca:3306/OSGiBroker?useUnicode=true]]></dbURI> -->
+<!-- jdbc:mysql://pspi.magic.ubc.ca:3306/OSGiBroker?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true -->

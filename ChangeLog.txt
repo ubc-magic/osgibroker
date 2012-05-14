@@ -1,0 +1,7 @@
+version 1.4:
+	* added "cachingThread" object to BrokerCore.java and initCachingThread()/updated() methods to start()
+	* added CachingThread.java to osgibroker.impl > ca.ubc.magic.broker.cache;
+	* added "ca.ubc.magic.broker.service.cache.thread.properties" to /configurations/services
+	* for ContentServlet.java, EventsServlet.java, StateServlet.java, and TopicServlet.java, added a check for whether "format" is a parameter, if value of "format" is either "xml" or "json", run the corresponding method to retrieve data (ie. returnEventsWithXML() or StateManager.getJSON())
+	* ContentManager.java and StateManager.java have writeJSON() and writeJSONElement() now
+	* added com.springsource.net.sf.ezmorph, com.springsource.net.sf.json, com.springsource.nu.xom, com.springsource.org.apache.commons.beanutils, com.springsource.org.apache.commons.collections to the lib fodler for writing JSON and added org.springframework.transaction-2.5.6.SEC01.jar to lib because it was missing from v1.3 and it was needed to run

@@ -1,0 +1,51 @@
+package ca.ubc.magic.broker.publisher.service.servlet;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.ops4j.pax.web.service.WebContainer;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.http.HttpContext;
+
+import ca.ubc.magic.broker.publisher.api.PublisherIF;
+
+public class PublisherServletServiceOPAX implements BundleActivator {
+	 
+	private ServiceReference m_httpServiceRef;
+	private ServiceReference m_publisherServiceRef;
+
+	    public void start( BundleContext bc ) throws Exception {
+	       
+	                m_httpServiceRef = bc.getServiceReference( WebContainer.class.getName() );
+	        if( m_httpServiceRef != null ) {
+	                        final WebContainer webContainer = (WebContainer) bc.getService( m_httpServiceRef );
+	            if( webContainer != null ) {
+	                // create a default context to share between registrations
+	                final HttpContext httpContext = webContainer.createDefaultHttpContext();
+	                // register the hello world servlet
+	                final Dictionary initParams = new Hashtable();
+	                initParams.put( "from", "HttpService" );
+	                
+	                m_publisherServiceRef = bc.getServiceReference( PublisherIF.class.getName() );
+	                if (m_publisherServiceRef != null){
+	                
+	                	final PublisherIF publisher = (PublisherIF) bc.getService(m_publisherServiceRef);
+	                	webContainer.registerServlet("/servlet/publisher", new PublisherServlet(publisher), initParams, httpContext);
+	                }
+	                // register html pages as resources
+	                webContainer.registerResources("/html", "/", httpContext);
+	            }
+	        }
+	    }
+
+	    public void stop( BundleContext bc ) throws Exception {
+	        if( m_httpServiceRef != null ) {
+	            bc.ungetService( m_httpServiceRef );
+	            m_httpServiceRef = null;
+	        }
+	    }
+
+
+}

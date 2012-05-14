@@ -1,0 +1,81 @@
+<statements>
+	<topic-store>
+		<add-topic>INSERT INTO topics (name) VALUES (?)</add-topic>
+		<exist-topic>SELECT * from topics WHERE name=?</exist-topic>
+		<get-topic-by-id>SELECT name from topics WHERE id=?</get-topic-by-id>
+		<delete-topic>DELETE FROM topics WHERE name=?</delete-topic>
+		<get-topic-names>SELECT name from topics WHERE name REGEXP ?</get-topic-names>
+	</topic-store>
+	
+	<client-store>
+		<add-client>INSERT INTO clients (topic_id, subscription_id, type, name, access, expire_time) VALUES ((SELECT topics.id from topics WHERE topics.name=?), (SELECT subscriptions.id FROM subscriptions WHERE subscriptions.name=?), ?, ?, ?, ?)</add-client>
+		<get-clients-by-topic>SELECT * FROM clients WHERE topic_id=(SELECT id FROM topics WHERE name=?)</get-clients-by-topic>
+		<get-clients-by-subscription>SELECT * FROM clients WHERE subscription_id=(SELECT id FROM subscriptions WHERE name=?)</get-clients-by-subscription>
+		<delete-client>DELETE FROM clients WHERE clients.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND clients.name=?</delete-client>
+		<exist-client>SELECT * FROM clients WHERE topic_id=(SELECT topics.id FROM topics WHERE topics.name=?) AND clients.name=?</exist-client>
+		<get-client-topicID-by-id>SELECT topic_id FROM clients WHERE clients.id=?</get-client-topicID-by-id>
+		<get-client-topicID-by-name>SELECT topic_id FROM clients WHERE clients.name=?</get-client-topicID-by-name>		
+		<add-client-props>INSERT INTO clientprops (client_id, prop_name, prop_value) VALUES (?, ?, ?)</add-client-props>
+		<delete-client-props>DELETE FROM clientprops WHERE clientprops.client_id=?</delete-client-props>
+		<update-client-props>UPDATE clientprops, clients, topics SET clientprops.prop_value=? WHERE clients.name=? AND clients.type=? AND clientprops.prop_name=? AND topics.name=? AND clientprops.client_id=clients.id AND clients.topic_id=topics.id</update-client-props>
+		<get-client-props>SELECT * FROM clientprops WHERE client_id=?</get-client-props>
+	</client-store>
+	
+	<eventlog-store>
+		<add-event-log>INSERT INTO eventlogs (topic_id, server_time, client_time) VALUES ((SELECT topics.id FROM topics WHERE topics.name=?), ?, ?)</add-event-log>
+		<add-event>INSERT INTO events (event_id, name, value) VALUES (?, ?, ?)</add-event>
+		<!--  <delete-event-log>DELETE FROM eventlogs WHERE id=?</delete-event-log>
+		<delete-event>DELETE FROM events WHERE event_id=?</delete-event> -->
+		<delete-event>DELETE events.*, eventlogs.* FROM events, topics, eventlogs WHERE topics.name = (SELECT topics.name FROM topics WHERE topics.name=?) AND topics.id = eventlogs.topic_id AND events.event_id = eventlogs.id</delete-event>
+
+		<!-- <get-last-events>SELECT eventlogs.id, eventlogs.time FROM eventlogs WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY eventlogs.id DESC LIMIT 0,?</get-last-events>
+		<get-event>SELECT name,value FROM events WHERE event_id=?</get-event>
+		<get-last-events>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY eventlogs.id DESC LIMIT 0,?</get-last-events-->
+		<get-last-events>SELECT events.event_id, events.name, events.value, logelems.server_time, logelems.client_time FROM events JOIN (SELECT id, topic_id, server_time, client_time from eventlogs WHERE topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY id DESC LIMIT 0,?) as logelems ON events.event_id = logelems.id</get-last-events>
+		
+		<get-event-timestamp>SELECT eventlogs.server_time FROM eventlogs WHERE eventlogs.id=?</get-event-timestamp>
+		<get-last-event-logs>SELECT eventlogs.id FROM eventlogs WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?)</get-last-event-logs>
+
+		<get-client-event-num-before>SELECT events.event_id, events.name, events.value, logelems.server_time, logelems.client_time FROM events JOIN (SELECT id, topic_id, server_time, client_time from eventlogs WHERE client_time &lt;= ? AND topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY id DESC LIMIT ?) as logelems ON events.event_id = logelems.id</get-client-event-num-before>
+		<get-client-event-time-before>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.client_time BETWEEN ? - ? AND ? ORDER BY eventlogs.client_time DESC</get-client-event-time-before>
+		<get-client-event-num-after>SELECT events.event_id, events.name, events.value, logelems.server_time, logelems.client_time FROM events JOIN (SELECT id, topic_id, server_time, client_time from eventlogs WHERE client_time &gt;= ? AND topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY id ASC LIMIT ?) as logelems ON events.event_id = logelems.id</get-client-event-num-after>
+		<get-client-event-time-after>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.client_time BETWEEN ? AND ? + ? ORDER BY eventlogs.client_time DESC</get-client-event-time-after>
+		<get-client-event-frame>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.client_time BETWEEN ? AND ? ORDER BY eventlogs.client_time DESC</get-client-event-frame>
+		
+		<get-server-event-num-before>SELECT events.event_id, events.name, events.value, logelems.server_time, logelems.client_time FROM events JOIN (SELECT id, topic_id, server_time, client_time from eventlogs WHERE server_time &lt;= ? AND topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY id DESC LIMIT ?) as logelems ON events.event_id = logelems.id</get-server-event-num-before>
+		<get-server-event-time-before>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.server_time BETWEEN ? - ? AND ? ORDER BY eventlogs.server_time DESC</get-server-event-time-before>
+		<get-server-event-num-after>SELECT events.event_id, events.name, events.value, logelems.server_time, logelems.client_time FROM events JOIN (SELECT id, topic_id, server_time, client_time from eventlogs WHERE server_time &gt;= ? AND topic_id=(SELECT id FROM topics WHERE topics.name=?) ORDER BY id ASC LIMIT ?) as logelems ON events.event_id = logelems.id</get-server-event-num-after>
+		<get-server-event-time-after>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.server_time BETWEEN ? AND ? + ? ORDER BY eventlogs.server_time DESC</get-server-event-time-after>
+		<get-server-event-frame>SELECT events.event_id, events.name, events.value, eventlogs.server_time, eventlogs.client_time FROM events JOIN eventlogs ON events.event_id=eventlogs.id WHERE eventlogs.topic_id=(SELECT id FROM topics WHERE topics.name=?) AND eventlogs.server_time BETWEEN ? AND ? ORDER BY eventlogs.server_time DESC</get-server-event-frame>
+	</eventlog-store>
+	
+	<subscriber-store>
+		<add-subscriber>INSERT INTO subscriptions (name) VALUES (?)</add-subscriber>
+		<get-subscribers>SELECT subscriptions.id FROM subscriptions WHERE subscriptions.name=?)</get-subscribers>
+		<delete-subscriber>DELETE FROM subscriptions WHERE name=?</delete-subscriber>
+		<exist-subscriber>SELECT * FROM subscriptions WHERE subscriptions.name=?</exist-subscriber>
+	</subscriber-store>
+	
+	<state-store>
+		<get-topic>SELECT topics.name FROM topics JOIN state_attributes ON topics.id = state_attributes.topic_id</get-topic>
+		<get-topic-state>SELECT * FROM state_attributes WHERE state_attributes.topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</get-topic-state>
+		<get-topic-attr>SELECT * FROM state_attributes WHERE name=? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</get-topic-attr>
+		<get-topic-state-names> SELECT state_attributes.name FROM state_attributes WHERE state_attributes.topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</get-topic-state-names>
+		<set-topic-state>INSERT INTO state_attributes (attr_index, name, type, value, topic_id) VALUES (?, ?, ?, ?, (SELECT topics.id FROM topics WHERE topics.name=?))</set-topic-state>
+		<update-topic-state>UPDATE state_attributes SET value=?, type=? WHERE name=? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</update-topic-state>
+		<delete-topic-all-states>DELETE FROM state_attributes WHERE topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</delete-topic-all-states>
+		<delete-topic-state>DELETE FROM state_attributes WHERE name=? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</delete-topic-state>
+	</state-store>
+	
+	<content-store>
+		<get-topic>SELECT topics.name FROM topics JOIN content_attributes ON topics.id = content_attributes.topic_id</get-topic>
+		<set-topic-content>INSERT INTO content_attributes (content_id, name, value, topic_id) VALUES (?, ?, ?, (SELECT topics.id FROM topics WHERE topics.name=?))</set-topic-content>
+		<get-topic-content>SELECT * FROM content_attributes WHERE topic_id=(SELECT topics.id FROM topics where topics.name=?)</get-topic-content>
+		<get-topic-content-by-id>SELECT * FROM content_attributes WHERE content_id=? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</get-topic-content-by-id>
+		<update-content-by-id>UPDATE content_attributes SET value=? WHERE name=? AND content_id=? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</update-content-by-id>
+		<delete-topic-all-content>DELETE FROM content_attributes WHERE topic_id =(SELECT topics.id FROM topics WHERE topics.name = ?)</delete-topic-all-content>
+		<delete-topic-content-by-id>DELETE FROM content_attributes WHERE content_id = ? AND topic_id=(SELECT topics.id FROM topics WHERE topics.name = ?)</delete-topic-content-by-id>
+		<get-topic-content-ids>SELECT DISTINCT content_id FROM content_attributes WHERE topic_id=(SELECT topics.id FROM topics WHERE topics.name=?)</get-topic-content-ids>
+	</content-store>
+
+</statements>

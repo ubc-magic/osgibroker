@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>project</id>
+  <formats>
+    <format>tar.gz</format>
+<!--    <format>tar.bz2</format>-->
+<!--    <format>zip</format>-->
+  </formats>
+     <fileSets>
+     
+		<!--  broker   -->
+        <fileSet>
+                <directory>${basedir}/osgibroker.api/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+		<fileSet>
+                <directory>${basedir}/osgibroker.impl/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/osgibroker.sms.installer/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/osgibroker.sms/target</directory>
+                <outputDirectory>/broker/sms</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+		<fileSet>
+                <directory>${basedir}/osgibroker.storage/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/osgibroker.ws/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+		<fileSet>
+                <directory>${basedir}/subscriber.servlet/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/subscriber.tcp/target</directory>
+                <outputDirectory>/broker</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+    
+		<!--  Configurations   -->
+        <fileSet>
+                <directory>${basedir}/configurations/services</directory>
+                <outputDirectory>/configurations/services</outputDirectory>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/configurations/factories</directory>
+                <outputDirectory>/configurations/factories</outputDirectory>
+        </fileSet>
+        
+		<!--  lib   -->
+        <fileSet>
+                <directory>${basedir}/lib</directory>
+                <outputDirectory>/lib</outputDirectory>
+                <includes><include>**.*</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/lib/sms</directory>
+                <outputDirectory>/broker/sms</outputDirectory>
+                <includes><include>**.jar</include></includes>
+        </fileSet>
+
+        <!-- felix -->
+        <fileSet>
+                <directory>${basedir}/felix</directory>
+                <outputDirectory>/felix</outputDirectory>
+                <includes><include>**</include></includes>
+        </fileSet>
+        <fileSet>
+                <directory>${basedir}/felix/conf</directory>
+                <outputDirectory>/felix/conf/</outputDirectory>
+                <includes><include>config.properties</include></includes>
+        </fileSet>
+
+
+        <!-- _content directory -->
+        <fileSet>
+            <directory>${basedir}/_content</directory>
+            <outputDirectory>_content</outputDirectory>
+            <includes><include/></includes>
+        </fileSet>
+        <!--  others (place in $(basedir) first)   -->
+        <fileSet>
+                <directory>${basedir}</directory>
+                <outputDirectory>/</outputDirectory>
+                <includes>
+                	<include>ChangeLog</include>
+                	<include>start.bat</include>
+                	<include>start.sh</include>
+                	<include>kill.sh</include>
+                </includes>
+        </fileSet>
+  </fileSets>
+</assembly>

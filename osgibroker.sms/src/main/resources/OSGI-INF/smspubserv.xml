@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ca.ubc.magic.broker.publisher.service.sms.SMSPublisherDS" immediate="true">
+  <implementation class="ca.ubc.magic.broker.publisher.service.sms.SMSPublisherPolling" />
+  <property name="service.description" value="SMS Publisher Service" />
+  <property name="service.vendor" value="UBC MAGIC Lab" />
+  <property name="service.pid" value="ca.ubc.magic.broker.publisher.service.sms.SMSPublisherDS" />
+  <service>
+  	<provide interface="org.osgi.service.cm.ManagedService"/>
+  </service>
+  <reference
+  	bind="bindPublisherServ" 
+  	cardinality="1..1" 
+  	interface="ca.ubc.magic.broker.api.PublisherIF" 
+  	name="PublisherIF" 
+  	policy="static" 
+  	unbind="unbindPublisherServ"/>
+</component>

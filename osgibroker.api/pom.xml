@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <parent>
+    <artifactId>osgibroker.parent.mvn</artifactId>
+    <groupId>ubc.magic.broker</groupId>
+    <version>1.4.0</version>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ubc.magic.broker</groupId>
+  <artifactId>osgibroker.api</artifactId>
+  <name>osgibroker-api</name>
+  <version>1.3.2</version>
+  <description>The APIs required for the OSGiBroker</description>
+  <url>http://pspi.magic.ubc.ca</url>
+  <packaging>bundle</packaging>
+  
+  <dependencies>
+	  <dependency>  
+	  		<groupId>org.apache.commons</groupId>  
+	  		<artifactId>com.springsource.org.apache.commons.fileupload</artifactId>  
+	  		<version>1.2.0</version>
+	  		<scope>provided</scope> 
+	  </dependency>
+	  <dependency>
+  		<groupId>org.ops4j.pax.logging</groupId>
+  		<artifactId>pax-logging-api</artifactId>
+  		<version>1.3.0</version>
+  		<type>bundle</type>
+  		<scope>provided</scope>
+  	</dependency>
+    <dependency>
+  		<groupId>org.ops4j.pax.logging</groupId>
+  		<artifactId>pax-logging-service</artifactId>
+  		<version>1.3.0</version>
+  		<type>bundle</type>
+  		<scope>provided</scope>
+  	</dependency>
+  </dependencies>
+  <organization>
+  	<name>UBC</name>
+  	<url>http://www.ubc.ca</url>
+  </organization>
+  
+  <build>
+    <plugins>
+      <plugin>    <!-- (2) START -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Public-Package>ca.ubc.magic.broker.*</Public-Package> 
+            <Export-Package>ca.ubc.magic.broker.*</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>    <!-- (2) END -->
+    </plugins>
+  </build>
+</project>
